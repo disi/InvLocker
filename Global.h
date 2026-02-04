@@ -18,6 +18,8 @@ extern const F4SE::TaskInterface* g_taskInterface;
 // Default ini file
 extern const char* defaultIni;
 
+// Global module name
+extern std::string g_moduleName;
 // Global debug flag
 extern bool DEBUGGING;
 // Lock equipped inventory items
@@ -26,6 +28,10 @@ extern bool LOCK_EQUIPPED;
 extern bool LOCK_FAVORITES;
 // Lock scrapping of equipped and/or favorite inventory items
 extern bool LOCK_SCRAP;
+// Bi-directional locking
+extern bool LOCK_BIDIRECTIONAL;
+// Lock when using Take All Items
+extern bool LOCK_TAKEALL;
 
 // Helper function to convert string to lowercase
 inline std::string ToLower(const std::string& str) {

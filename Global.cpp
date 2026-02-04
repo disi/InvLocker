@@ -10,4 +10,8 @@ LOCK_EQUIPPED=true
 LOCK_FAVORITES=true
 ; Lock equipped and/or favorite inventory items from scrapping
 LOCK_SCRAP=true
+; Bi-directional locking
+LOCK_BIDIRECTIONAL=true
+; Lock items when Take All Items is used
+LOCK_TAKEALL=true
 )";

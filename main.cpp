@@ -13,13 +13,16 @@ std::shared_ptr<spdlog::logger> gLog;
 namespace Version
 {
     inline constexpr std::size_t MAJOR = 0;
-    inline constexpr std::size_t MINOR = 0;
-    inline constexpr std::size_t PATCH = 3;
-    inline constexpr auto NAME = "0.0.3"sv;
+    inline constexpr std::size_t MINOR = 1;
+    inline constexpr std::size_t PATCH = 0;
+    inline constexpr auto NAME = "0.1.0"sv;
     inline constexpr auto AUTHORNAME = "disi"sv;
     inline constexpr auto PROJECT = "InvLockerCL"sv;
 } // namespace Version
 
+
+// Global Module Name
+std::string g_moduleName = "InvLockerCL";
 // Declare the F4SEMessagingInterface and F4SEScaleformInterface
 const F4SE::MessagingInterface *g_messaging = nullptr;
 // Papyrus interface
@@ -36,13 +39,17 @@ RE::TESDataHandler *g_dataHandle = 0;
 // Variables
 
 // Global debug flag
-bool DEBUGGING = true;
+bool DEBUGGING = false;
 // Lock equipped inventory items
 bool LOCK_EQUIPPED = true;
 // Lock favorite inventory items
 bool LOCK_FAVORITES = true;
 // Lock scrapping of equipped and/or favorite inventory items
 bool LOCK_SCRAP = true;
+// Bi-directional locking
+bool LOCK_BIDIRECTIONAL = true;
+// Lock when using Take All Items
+bool LOCK_TAKEALL = true;
 
 // Helper function to extract value from a line
 inline std::string GetValueFromLine(const std::string &line)
@@ -144,6 +151,26 @@ void LoadConfig(HMODULE hModule)
             }
             continue;
         }
+        // --- Lock bi-directional flag ---
+        if (lowerLine.find("lock_bidirectional") == 0) {
+            std::string value = GetValueFromLine(line);
+            if (ToLower(value) == "false" || value == "0") {
+                LOCK_BIDIRECTIONAL = false;
+            } else {
+                LOCK_BIDIRECTIONAL = true;
+            }
+            continue;
+        }
+        // --- Lock Take All Items flag ---
+        if (lowerLine.find("lock_takeall") == 0) {
+            std::string value = GetValueFromLine(line);
+            if (ToLower(value) == "false" || value == "0") {
+                LOCK_TAKEALL = false;
+            } else {
+                LOCK_TAKEALL = true;
+            }
+            continue;
+        }
     }
     file.close();
     REX::INFO("LoadConfig: Completed loading config.");
@@ -151,6 +178,8 @@ void LoadConfig(HMODULE hModule)
     REX::INFO(" - Lock Equipped Inventory Items: {}", LOCK_EQUIPPED);
     REX::INFO(" - Lock Favorite Inventory Items: {}", LOCK_FAVORITES);
     REX::INFO(" - Lock Scrapping of Equipped/Favorite Items: {}", LOCK_SCRAP);
+    REX::INFO(" - Lock Bi-Directional: {}", LOCK_BIDIRECTIONAL);
+    REX::INFO(" - Lock Take All Items: {}", LOCK_TAKEALL);
 }
 
 // Message handler definition
